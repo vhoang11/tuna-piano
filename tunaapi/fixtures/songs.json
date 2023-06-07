@@ -1,0 +1,32 @@
+[
+  {
+      "model": "tunaapi.song",
+      "pk": 1,
+      "fields": {
+          "title": "Man, I feel like a Woman!",
+          "artist_id": 1,
+          "album": "Come On Over",
+          "length": 4
+      }
+  },
+  {
+      "model": "tunaapi.song",
+      "pk": 2,
+      "fields": {
+          "title": "Anti-Hero",
+          "artist_id": 2,
+          "album": "Midnights",
+          "length": 5
+      }
+  },
+  {
+      "model": "tunaapi.song",
+      "pk": 3,
+      "fields": {
+          "title": "Tennessee Whiskey",
+          "artist_id": 3,
+          "album": "Traveller",
+          "length": 6
+      }
+  }
+]

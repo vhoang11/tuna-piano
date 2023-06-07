@@ -42,6 +42,12 @@ INSTALLED_APPS = [
     'tunaapi',
 ]
 
+# THIS IS NEW
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

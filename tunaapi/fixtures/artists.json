@@ -1,0 +1,29 @@
+[
+  {
+      "model": "tunaapi.artist",
+      "pk": 1,
+      "fields": {
+          "name": "Shania Twain",
+          "age": 39,
+          "bio": "Eilleen Regina Shania Twain OC is a Canadian singer-songwriter and actress. She is one of the best-selling music artists of all time and the best-selling female artist in country music history. Her success garnered her several titles including the Queen of Country Pop"
+      }
+  },
+  {
+      "model": "tunaapi.artist",
+      "pk": 2,
+      "fields": {
+          "name": "Taylor Swift",
+          "age": 43,
+          "bio": "Taylor Alison Swift is an American singer-songwriter. Recognized for her genre-spanning discography, songwriting, and artistic reinventions, Swift is a prominent cultural figure who has been cited as an influence on a generation of music artists"
+      }
+  },
+  {
+      "model": "tunaapi.artist",
+      "pk": 3,
+      "fields": {
+          "name": "Chris Stapleton",
+          "age": 56,
+          "bio": "Christopher Alvin Stapleton is an American singer-songwriter, guitarist, and record producer. He was born in Lexington, Kentucky, and grew up in Staffordsville, Kentucky."
+      }
+  }
+]
