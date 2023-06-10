@@ -13,19 +13,18 @@ class SongView(ViewSet):
         
         try:
             song = Song.objects.get(pk=pk)
-            serializer = SongSerializer(song)
+            serializer = SongSerializer(song, context={'request': request})
             return Response(serializer.data)
-        except Song.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
+        except Artist.DoesNotExist:
+            return Response({'message': 'Song not found'}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         
         songs = Song.objects.all()
         
-        title = request.query_params.get('title', None)
-        if title is not None:
-            songs = songs.filter(title=title)
+        # title = request.query_params.get('title', None)
+        # if title is not None:
+        #     songs = songs.filter(title=title)
             
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -42,7 +41,7 @@ class SongView(ViewSet):
         )
         
         serializer = SongSerializer(song)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
         """Handle PUT requests for a song
@@ -59,8 +58,9 @@ class SongView(ViewSet):
         song.album = request.data["album"]
         song.length = request.data["length"]
         song.save()
-
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
+        serializer = SongSerializer(song)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def destroy(self, request, pk):
         
@@ -69,11 +69,28 @@ class SongView(ViewSet):
         
         return Response(None, status=status.HTTP_204_NO_CONTENT)
         
+# class SongGenreSerializer(serializers.ModelSerializer):
+#     """JSON serializer for genres"""
+
+#     class Meta:
+#         model = SongGenre
+#         fields = ('genre_id')
+#         depth = 1
 
 class SongSerializer(serializers.ModelSerializer):
-    """JSON serializer for songs
-    """
+    """JSON serializer for songs"""
+
+    artist = serializers.SerializerMethodField()
+    genres = serializers.SerializerMethodField()
+
     class Meta:
         model = Song
-        fields = ('id', 'title', 'artist_id', 'album', 'length')
-        depth = 1
+        fields = ('id', 'title', 'artist', 'album', 'length', 'genres')
+        
+    def get_genres(self, obj):
+      genres = obj.genres.all()
+      return [{'id': genre.genre_id.id, 'description': genre.genre_id.description} for genre in genres]
+  
+    def get_artist(self, obj):
+      artist = obj.artist_id
+      return [{'id': artist.id, 'name': artist.name,'age': artist.age, 'bio': artist.bio}]

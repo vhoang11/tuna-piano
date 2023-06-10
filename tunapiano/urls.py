@@ -21,13 +21,16 @@ from rest_framework import routers
 from tunaapi.views import ArtistView
 from tunaapi.views import SongView
 from tunaapi.views import GenreView
+from tunaapi.views import SongGenreView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'artists', ArtistView, 'artist')
 router.register(r'songs', SongView, 'song')
 router.register(r'genres', GenreView, 'genre')
+router.register(r'song_genres', SongGenreView, 'songgenre')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('genres/popular/', GenreView.as_view({'get': 'popular_genres'}), name='popular-genres'),
 ]
