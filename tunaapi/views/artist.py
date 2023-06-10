@@ -4,6 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from tunaapi.models import Artist
+from django.db.models import Count
 
 
 class ArtistView(ViewSet):
@@ -12,16 +13,16 @@ class ArtistView(ViewSet):
     def retrieve(self, request, pk):
         
         try:
-            artist = Artist.objects.get(pk=pk)
+            artist = Artist.objects.annotate(song_count=Count('songs')).get(pk=pk)
             serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Artist.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
 
     def list(self, request):
         
-        artists = Artist.objects.all()
+        artists = Artist.objects.annotate(song_count=Count('songs')).all()
         
         name = request.query_params.get('name', None)
         if name is not None:
@@ -39,7 +40,7 @@ class ArtistView(ViewSet):
         )
         
         serializer = ArtistSerializer(artist)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
         """Handle PUT requests for an artist
@@ -53,8 +54,9 @@ class ArtistView(ViewSet):
         artist.age = request.data["age"]
         artist.bio = request.data["bio"]
         artist.save()
-
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
+        serializer = ArtistSerializer(artist)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def destroy(self, request, pk):
         
@@ -67,7 +69,8 @@ class ArtistView(ViewSet):
 class ArtistSerializer(serializers.ModelSerializer):
     """JSON serializer for artists
     """
+    song_count = serializers.IntegerField(default=None)
     class Meta:
         model = Artist
-        fields = ('id', 'name', 'age', 'bio')
+        fields = ('id', 'name', 'age', 'bio', 'song_count', 'songs')
         depth = 1
