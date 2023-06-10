@@ -63,7 +63,7 @@ class GenreView(ViewSet):
         
         genres = Genre.objects.annotate(song_count=Count('songs')).order_by('-song_count')[:1]
 
-        serializer = SongsGenreSerializer(genres, many=True)
+        serializer = SongsgitGenreSerializer(genres, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
 
